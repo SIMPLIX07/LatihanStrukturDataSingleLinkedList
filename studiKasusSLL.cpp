@@ -54,14 +54,20 @@ void insertFirst(list &L, address &P) {
 }
 
 void insertAfter(list &L, address &P, string id) {
+    bool berhasil;
     address q = L.first;
     while (q != nil) {
         if (q->info.id == id) {
             P->next = q->next;
             q->next = P;
+            cout << "Pekerja berhasil dimasukan" << endl;
+            berhasil = true;
             return;
         }
         q = q->next;
+    }
+    if (berhasil == false){
+        cout << "pekerja tidak ditemukan "<< endl;
     }
 }
 
@@ -196,6 +202,7 @@ void hapusPekerjaDenganGajiTertentu(list &L, int batasGaji) {
             q = q->next;
         }
     }
+    cout << "Pekerja dengan gaji dibawah: " <<batasGaji << " telah dihapus" << endl;
 }
 
 void printList(list L) {
@@ -228,6 +235,9 @@ void printMenu() {
 }
 
 int main() {
+    string nama, idPekerja;
+    int gajiPekerja;
+    int input1;
     int input;
     list L;
     createList(L);
@@ -238,9 +248,6 @@ int main() {
 
         switch(input) {
             case 1: {
-                string nama, idPekerja;
-                int gajiPekerja;
-                int input1;
 
                 cout << "Masukan nama pekerja baru: ";
                 cin >> nama;
@@ -293,7 +300,43 @@ int main() {
                 break;
             }
 
-           //case selanjutnya ......
+            case 5: {
+                totalPengeluaranGaji(L);
+                break;
+            }
+
+            case 6:{
+                string insert;
+                cout << "Masukan nama pekerja baru: ";
+                cin >> nama;
+                cout << "Masukan ID Pekerja baru: ";
+                cin >> idPekerja;
+                cout << "Masukan gaji pekerja baru: ";
+                cin >> gajiPekerja;
+
+                infotype pekerjaBaru = {nama, idPekerja, gajiPekerja};
+                address P = createElmtlist(pekerjaBaru);
+
+                cout << "Masukan id pekerja sebelumnya: ";
+                cin >> insert;
+
+                insertAfter(L, P, insert);
+            }
+
+            //case 7
+
+            case 8:{
+                menampilkanGajiTertinggiDanTerendah(L);
+                break;
+            }
+
+            case 9:{
+                int batasanGaji;
+                cout << "Masukan batasan gaji: ";
+                cin >> batasanGaji;
+                hapusPekerjaDenganGajiTertentu(L, batasanGaji);
+                break;
+            }
 
             case 0:
                 cout << "Terima kasih, program selesai." << endl;
