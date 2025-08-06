@@ -34,6 +34,7 @@ void searchByName(list &L, string nama);
 void totalPengeluaranGaji(list &L);
 void menampilkanGajiTertinggiDanTerendah(list &L);
 void hapusPekerjaDenganGajiTertentu(list &L, int gaji);
+void updateGajiPekerja(list &L, string nama, int gaji);
 void printList(list L);
 void printMenu();
 
@@ -51,6 +52,8 @@ address createElmtlist(infotype data) {
 void insertFirst(list &L, address &P) {
     P->next = L.first;
     L.first = P;
+    cout << "\033[32mPekerja berhasil dimasukan\033[0m" << endl;
+
 }
 
 void insertAfter(list &L, address &P, string id) {
@@ -60,14 +63,14 @@ void insertAfter(list &L, address &P, string id) {
         if (q->info.id == id) {
             P->next = q->next;
             q->next = P;
-            cout << "Pekerja berhasil dimasukan" << endl;
+            cout << "\033[32mPekerja berhasil dimasukan\033[0m" << endl;
             berhasil = true;
             return;
         }
         q = q->next;
     }
     if (berhasil == false){
-        cout << "pekerja tidak ditemukan "<< endl;
+        cout << "\033[31mpekerja tidak ditemukan\033[0m" << endl;
     }
 }
 
@@ -89,13 +92,13 @@ void deleteFirst(list &L) {
         L.first = P->next;
         delete P;
     } else {
-        cout << "List Kosong" << endl;
+        cout << "\033[31mList Kosong\033[0m" << endl;
     }
 }
 
 void deleteLast(list &L) {
     if (L.first == nil) {
-        cout << "List Kosong" << endl;
+        cout << "\033[31mList Kosong\033[0m" << endl;
         return;
     }
 
@@ -118,6 +121,7 @@ void deleteById(list &L, string id) {
     if (L.first == nil) return;
     if (L.first->info.id == id) {
         deleteFirst(L);
+        cout << "\033[32mPekerja berhasil dihapus\033[0m" << endl;
         return;
     }
 
@@ -129,9 +133,10 @@ void deleteById(list &L, string id) {
         address r = q->next;
         q->next = r->next;
         delete r;
-        cout <<  "Pekerja berhasil dihapus" << endl;
+        cout << "\033[32mPekerja berhasil dihapus\033[0m" << endl;
+
     }else{
-        cout << "Pekerja dengan ID " << id << " tidak ditemukan" << endl;
+        cout << "\033[31mPekerja dengan ID " << id << " tidak ditemukan\033[0m" << endl;
     }
 }
 
@@ -141,11 +146,11 @@ void searchByName(list &L, string nama) {
         q = q->next;
     }
     if (q != nil) {
-        cout << "Data ditemukan\nNama: " << q->info.nama
+        cout << "\033[32mData ditemukan\nNama: " << q->info.nama
         << "\nID: " << q->info.id
         << "\nGaji: " << q->info.gaji << endl;
     } else {
-        cout << "Data tidak ditemukan" << endl;
+        cout << "\033[31mData tidak ditemukan\033[0m" << endl;
     }
 }
 
@@ -156,12 +161,12 @@ void totalPengeluaranGaji(list &L) {
         totalGaji += q->info.gaji;
         q = q->next;
     }
-    cout << "Total pengeluaran perusahaan bulan ini adalah: " << totalGaji << endl;
+    cout << "\033[32mTotal pengeluaran perusahaan bulan ini adalah: " << totalGaji << "\033[0m" << endl;
 }
 
 void menampilkanGajiTertinggiDanTerendah(list &L) {
     if (L.first == nil) {
-        cout << "List kosong" << endl;
+        cout << "\033[31mList Kosong\033[0m" << endl;
         return;
     }
 
@@ -182,9 +187,9 @@ void menampilkanGajiTertinggiDanTerendah(list &L) {
         }
         q = q->next;
     }
+    cout << "\033[32mGaji tertinggi adalah: " << tertinggi << " (oleh: " << namaTertinggi << ")\033[0m\n";
+    cout << "\033[32mGaji terendah  adalah: " << terendah << " (oleh: " << namaTerendah << ")\033[0m\n";
 
-    cout << "Gaji tertinggi adalah: " << tertinggi << " (oleh: " << namaTertinggi << ")\n";
-    cout << "Gaji terendah  adalah: " << terendah << " (oleh: " << namaTerendah << ")\n";
 }
 
 void hapusPekerjaDenganGajiTertentu(list &L, int batasGaji) {
@@ -202,12 +207,29 @@ void hapusPekerjaDenganGajiTertentu(list &L, int batasGaji) {
             q = q->next;
         }
     }
-    cout << "Pekerja dengan gaji dibawah: " <<batasGaji << " telah dihapus" << endl;
+    cout << "\033[32mPekerja dengan gaji dibawah: " << batasGaji << " telah dihapus\033[0m" << endl;
+}
+
+void updateGajiPekerja(list &L, string nama, int gaji){
+    bool ketemu =false;
+    address p = L.first;
+    while(p != nil){
+        if(p->info.nama == nama){
+            p->info.gaji = gaji;
+            ketemu = true;
+            cout << "\033[32mGaji pekerja yang bernama: " << nama << " telah berhasil di update\033[0m" << endl;
+            return;
+        }
+        p = p->next;
+    }
+    if(ketemu != true){
+        cout << "\033[31mPekerja tidak ditemukan\033[0m" << endl;
+    }
 }
 
 void printList(list L) {
     if (L.first == nil) {
-        cout << "List kosong" << endl;
+        cout << "\033[31mList kosong\033[0m" << endl;
         return;
     }
 
@@ -221,7 +243,7 @@ void printList(list L) {
 }
 
 void printMenu() {
-    cout << "===== MENU PEKERJA KONTRAK =====" << endl
+    cout << "\n===== MENU PEKERJA KONTRAK =====" << endl
     << "1. Tambah pekerja (awal/akhir)" << endl
     << "2. Tampilkan seluruh pekerja" << endl
     << "3. Hapus pekerja berdasarkan ID" << endl
@@ -231,7 +253,8 @@ void printMenu() {
     << "7. Update gaji pekerja" << endl
     << "8. Tampilkan gaji tertinggi & terendah" << endl
     << "9. Hapus pekerja dengan gaji < batas" << endl
-    << "0. Keluar" << endl;
+    << "0. Keluar" << endl
+    << "\033[33mMasukan input: \033[0m";
 }
 
 int main() {
@@ -321,9 +344,17 @@ int main() {
                 cin >> insert;
 
                 insertAfter(L, P, insert);
+                break;
             }
 
-            //case 7
+            case 7:{
+                cout << "Masukan nama pekerja: ";
+                cin >> nama;
+                cout << "Masukan gaji: ";
+                cin >>gajiPekerja;
+                updateGajiPekerja(L, nama, gajiPekerja);
+                break;
+            }
 
             case 8:{
                 menampilkanGajiTertinggiDanTerendah(L);
